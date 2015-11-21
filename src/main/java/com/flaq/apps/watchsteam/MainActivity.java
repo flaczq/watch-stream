@@ -11,6 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+/**
+ * Created by FLAQ on 2015-11-20.
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -59,4 +62,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
