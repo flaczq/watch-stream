@@ -1,10 +1,13 @@
 package com.flaq.apps.watchsteam;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,31 +60,49 @@ public class Utils {
             string = sb.toString();
             bis.close();
         } catch (MalformedURLException e) {
-            Log.e("error", e.getMessage());
+            Log.e("utils: downloadString", e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            Log.e("error", e.getMessage());
+            Log.e("utils: downloadString", e.getMessage());
             e.printStackTrace();
         }
 
         return string;
     }
 
-    public static InputStream downloadStream(String urlString) {
-        InputStream stream = null;
+    public static Bitmap downloadBitmap(String urlString) {
+        InputStream is;
+        Bitmap bitmap = null;
 
         try {
             URL url = new URL(urlString);
-            stream = url.openStream();
+            is = url.openConnection().getInputStream();
+            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
         } catch (MalformedURLException e) {
-            Log.e("error", e.getMessage());
+            Log.e("utils: downloadInputStream", e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            Log.e("error", e.getMessage());
+            Log.e("utils: downloadInputStream", e.getMessage());
             e.printStackTrace();
         }
 
-        return stream;
+        return bitmap;
+    }
+
+    public static void copyStream(InputStream is, OutputStream os) {
+        final int BUFFER_SIZE = 1024;
+        try {
+            byte[] bytes = new byte[BUFFER_SIZE];
+            int count;
+
+            while ((count = is.read(bytes, 0, BUFFER_SIZE)) != -1) {
+                os.write(bytes, 0, count);
+            }
+        } catch(Exception e) {
+            Log.e("utils: copyStream", e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }

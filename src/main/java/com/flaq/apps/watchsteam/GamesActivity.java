@@ -1,6 +1,7 @@
 package com.flaq.apps.watchsteam;
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,8 +24,10 @@ import java.util.HashMap;
  */
 public class GamesActivity extends AppCompatActivity {
 
-    ProgressDialog gamesPreloader;
-    ArrayList<HashMap<String, String>> gamesList;
+    private GridView gridView;
+    private GamesAdapter gamesAdapter;
+    private ProgressDialog gamesPreloader;
+    private ArrayList<HashMap<String, Object>> gamesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,8 @@ public class GamesActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        gridView = (GridView) findViewById(R.id.gridView);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -71,15 +76,16 @@ public class GamesActivity extends AppCompatActivity {
                 JSONObject gameObj, imageObj;
 
                 for(int i = 0; i < gamesArray.length(); i++) {
-                    HashMap<String, String> gameMap = new HashMap<>();
+                    HashMap<String, Object> gameMap = new HashMap<>();
 
                     gamesObj = gamesArray.getJSONObject(i);
                     gameObj = gamesObj.getJSONObject("game");
                     imageObj = gameObj.getJSONObject("box");
 
                     gameMap.put("name", gameObj.getString("name"));
-                    String encoded = Utils.encodeString(imageObj.getString("large"));
-                    gameMap.put("image", encoded);
+
+                    Bitmap image = Utils.downloadBitmap(imageObj.getString("large"));
+                    gameMap.put("image", image);
 
                     gamesList.add(gameMap);
                 }
@@ -93,10 +99,9 @@ public class GamesActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void args) {
-            GridView gridView = (GridView) findViewById(R.id.gridView);
-            ImageAdapter imageAdapter = new ImageAdapter(GamesActivity.this, gamesList);
+            gamesAdapter = new GamesAdapter(GamesActivity.this, gamesList);
+            gridView.setAdapter(gamesAdapter);
 
-            gridView.setAdapter(imageAdapter);
             gamesPreloader.dismiss();
         }
     }

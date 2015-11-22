@@ -2,36 +2,32 @@ package com.flaq.apps.watchsteam;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by FLAQ on 2015-11-21.
  */
-public class ImageAdapter extends BaseAdapter {
+public class GamesAdapter extends BaseAdapter {
 
+    private ImageView imageView;
     private Context context;
-    private ArrayList<HashMap<String, String>> imagesArray;
-    //private ImageLoader imageLoader;
+    private ArrayList<HashMap<String, Object>> gamesList;
 
-    public ImageAdapter(Context context, ArrayList<HashMap<String, String>> imagesArray) {
+    public GamesAdapter(Context context, ArrayList<HashMap<String, Object>> gamesList) {
         this.context = context;
-        this.imagesArray = imagesArray;
+        this.gamesList = gamesList;
 
-        //imageLoader = new ImageLoader(context);
     }
 
     @Override
     public int getCount() {
-        return imagesArray.size();
+        return gamesList.size();
     }
 
     @Override
@@ -46,20 +42,21 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
+        HashMap<String, Object> game = gamesList.get(position);
 
         if (convertView == null) {
             imageView = new ImageView(context);
-            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
         } else {
             imageView = (ImageView) convertView;
+            imageView.setPadding(1, 1, 1, 1);
+            imageView.setBackgroundColor(000);
+            imageView.setAdjustViewBounds(true);
+            imageView.setImageDrawable(context.getDrawable(R.mipmap.blank));
+            imageView.setMinimumWidth(272);
         }
 
-        InputStream is = Utils.downloadStream(imagesArray.get(position).get("image"));
-        Bitmap image = BitmapFactory.decodeStream(is);
-        imageView.setImageBitmap(image);
+        Bitmap bitmap = (Bitmap) game.get("image");
+        imageView.setImageBitmap(bitmap);
 
         return imageView;
     }
