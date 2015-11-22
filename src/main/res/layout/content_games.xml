@@ -10,4 +10,11 @@
     tools:showIn="@layout/activity_games" tools:context="com.flaq.apps.watchsteam.GamesActivity"
     android:background="#fb7979">
 
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/gridView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

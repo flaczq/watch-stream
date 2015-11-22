@@ -1,5 +1,6 @@
 package com.flaq.apps.watchsteam;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.GridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +23,7 @@ import java.util.HashMap;
  */
 public class GamesActivity extends AppCompatActivity {
 
+    ProgressDialog gamesPreloader;
     ArrayList<HashMap<String, String>> gamesList;
 
     @Override
@@ -29,7 +32,6 @@ public class GamesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_games);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -51,34 +53,35 @@ public class GamesActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            /*pd_game = new ProgressDialog(GamesActivity.this);
-            pd_game.setTitle("Please wait");
-            pd_game.setMessage("Games are loading...");
-            pd_game.setIndeterminate(false);
-            pd_game.show();*/
+            gamesPreloader = new ProgressDialog(GamesActivity.this);
+            gamesPreloader.setTitle("Please wait");
+            gamesPreloader.setMessage("Games are loading...");
+            gamesPreloader.setIndeterminate(false);
+            gamesPreloader.show();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            String gamesString = JSONFunctions.downloadText(getString(R.string.json_url_games_top));
+            String gamesString = Utils.downloadString(getString(R.string.json_url_games_top));
             gamesList = new ArrayList<>();
 
             try {
                 JSONObject gamesObj = new JSONObject(gamesString);
                 JSONArray gamesArray = gamesObj.getJSONArray("top");
-                HashMap<String, String> gameMap = new HashMap<>();
                 JSONObject gameObj, imageObj;
 
                 for(int i = 0; i < gamesArray.length(); i++) {
+                    HashMap<String, String> gameMap = new HashMap<>();
+
                     gamesObj = gamesArray.getJSONObject(i);
                     gameObj = gamesObj.getJSONObject("game");
                     imageObj = gameObj.getJSONObject("box");
 
                     gameMap.put("name", gameObj.getString("name"));
-                    gameMap.put("image", imageObj.getString("large"));
+                    String encoded = Utils.encodeString(imageObj.getString("large"));
+                    gameMap.put("image", encoded);
 
                     gamesList.add(gameMap);
-                    gameMap.clear();
                 }
             } catch (JSONException e) {
                 Log.e("games json", e.getMessage());
@@ -90,12 +93,11 @@ public class GamesActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void args) {
-            /*gv_game = (GridView) findViewById(R.id.gv_game);
-            adapter = new LVAGames(GamesActivity.this, gamesList);
+            GridView gridView = (GridView) findViewById(R.id.gridView);
+            ImageAdapter imageAdapter = new ImageAdapter(GamesActivity.this, gamesList);
 
-            gv_game.setAdapter(adapter);
-
-            pd_game.dismiss();*/
+            gridView.setAdapter(imageAdapter);
+            gamesPreloader.dismiss();
         }
     }
 
