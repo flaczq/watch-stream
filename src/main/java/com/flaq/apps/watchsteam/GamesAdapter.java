@@ -15,14 +15,12 @@ import java.util.HashMap;
  */
 public class GamesAdapter extends BaseAdapter {
 
-    private ImageView imageView;
     private Context context;
     private ArrayList<HashMap<String, Object>> gamesList;
 
     public GamesAdapter(Context context, ArrayList<HashMap<String, Object>> gamesList) {
         this.context = context;
         this.gamesList = gamesList;
-
     }
 
     @Override
@@ -42,20 +40,17 @@ public class GamesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        HashMap<String, Object> game = gamesList.get(position);
+        ImageView imageView;
 
         if (convertView == null) {
             imageView = new ImageView(context);
+            imageView.setAdjustViewBounds(true);
+            imageView.setImageResource(R.mipmap.blank);
         } else {
             imageView = (ImageView) convertView;
-            imageView.setPadding(1, 1, 1, 1);
-            imageView.setBackgroundColor(000);
-            imageView.setAdjustViewBounds(true);
-            imageView.setImageDrawable(context.getDrawable(R.mipmap.blank));
-            imageView.setMinimumWidth(272);
         }
 
-        Bitmap bitmap = (Bitmap) game.get("image");
+        Bitmap bitmap = (Bitmap) gamesList.get(position).get("image");
         imageView.setImageBitmap(bitmap);
 
         return imageView;

@@ -18,7 +18,7 @@ import java.net.URLEncoder;
  */
 public class Utils {
 
-    public static String encodeString(String urlString) {
+    public static String encodeUrl(String urlString) {
         String encoded = "";
         String[] split = urlString.split("/");
 
@@ -41,7 +41,7 @@ public class Utils {
         return encoded;
     }
 
-    public static String downloadString(String urlString) {
+    public static String downloadUrl(String urlString) {
         String string = "";
 
         try {
@@ -60,10 +60,10 @@ public class Utils {
             string = sb.toString();
             bis.close();
         } catch (MalformedURLException e) {
-            Log.e("utils: downloadString", e.getMessage());
+            Log.e("utils.downloadUrl", e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            Log.e("utils: downloadString", e.getMessage());
+            Log.e("utils.downloadUrl", e.getMessage());
             e.printStackTrace();
         }
 
@@ -80,10 +80,10 @@ public class Utils {
             bitmap = BitmapFactory.decodeStream(is);
             is.close();
         } catch (MalformedURLException e) {
-            Log.e("utils: downloadInputStream", e.getMessage());
+            Log.e("utils.downloadBitmap", e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            Log.e("utils: downloadInputStream", e.getMessage());
+            Log.e("utils.downloadBitmap", e.getMessage());
             e.printStackTrace();
         }
 
@@ -100,7 +100,7 @@ public class Utils {
                 os.write(bytes, 0, count);
             }
         } catch(Exception e) {
-            Log.e("utils: copyStream", e.getMessage());
+            Log.e("utils.copyStream", e.getMessage());
             e.printStackTrace();
         }
     }

@@ -67,7 +67,7 @@ public class GamesActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            String gamesString = Utils.downloadString(getString(R.string.json_url_games_top));
+            String gamesString = Utils.downloadUrl(getString(R.string.json_url_games_top));
             gamesList = new ArrayList<>();
 
             try {

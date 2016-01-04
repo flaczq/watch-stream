@@ -16,6 +16,9 @@
         android:cacheColorHint="#66CCFF"
         android:listSelector="@null"
         android:scrollingCache="false"
-        android:gravity="center" />
+        android:gravity="center"
+        android:horizontalSpacing="3dp"
+        android:verticalSpacing="3dp"
+        android:padding="3dp" />
 
 </RelativeLayout>
