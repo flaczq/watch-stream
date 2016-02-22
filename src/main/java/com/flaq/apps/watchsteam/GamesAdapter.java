@@ -1,12 +1,12 @@
 package com.flaq.apps.watchsteam;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +17,7 @@ import java.util.HashMap;
 public class GamesAdapter extends BaseAdapter {
 
     private Context context;
+    private Intent intent;
     private ArrayList<HashMap<String, Object>> gamesList;
 
     public GamesAdapter(Context context, ArrayList<HashMap<String, Object>> gamesList) {
@@ -41,6 +42,7 @@ public class GamesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        final HashMap<String, Object> singleGame = gamesList.get(position);
         ImageView imageView;
 
         if (convertView == null) {
@@ -51,16 +53,15 @@ public class GamesAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        Bitmap bitmap = (Bitmap) gamesList.get(position).get("image");
+        Bitmap bitmap = (Bitmap) singleGame.get("image");
         imageView.setImageBitmap(bitmap);
-
-        final String text = "game no." + position;
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-                toast.show();
+                intent = new Intent(context, GameStreamsActivity.class);
+                intent.putExtra("name", (String) singleGame.get("name"));
+                context.startActivity(intent);
             }
         });
 
