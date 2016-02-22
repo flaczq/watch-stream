@@ -4,12 +4,9 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -19,9 +16,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by FLAQ on 2015-11-20.
- */
 public class GamesActivity extends AppCompatActivity {
 
     private GridView gridView;
@@ -38,16 +32,6 @@ public class GamesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         gridView = (GridView) findViewById(R.id.gridView);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         DownJSON jsonInstance = new DownJSON();
         jsonInstance.execute();
