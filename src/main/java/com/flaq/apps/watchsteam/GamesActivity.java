@@ -72,13 +72,13 @@ public class GamesActivity extends AppCompatActivity {
 
             try {
                 JSONObject gamesObj = new JSONObject(gamesString);
-                JSONArray gamesArray = gamesObj.getJSONArray("top");
+                JSONArray gamesArr = gamesObj.getJSONArray("top");
                 JSONObject gameObj, imageObj;
 
-                for(int i = 0; i < gamesArray.length(); i++) {
+                for(int i = 0; i < gamesArr.length(); i++) {
                     HashMap<String, Object> gameMap = new HashMap<>();
 
-                    gamesObj = gamesArray.getJSONObject(i);
+                    gamesObj = gamesArr.getJSONObject(i);
                     gameObj = gamesObj.getJSONObject("game");
                     imageObj = gameObj.getJSONObject("box");
 
