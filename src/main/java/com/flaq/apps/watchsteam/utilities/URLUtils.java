@@ -1,4 +1,4 @@
-package com.flaq.apps.watchsteam;
+package com.flaq.apps.watchsteam.utilities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,12 +13,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-/**
- * Created by FLAQ on 2015-11-21.
- */
-public class Utils {
+public class URLUtils {
 
-    public static String encodeUrl(String urlString) {
+    public static String encode(String urlString) {
         String encoded = "";
         String[] split = urlString.split("/");
 
@@ -41,7 +38,7 @@ public class Utils {
         return encoded;
     }
 
-    public static String downloadUrl(String urlString) {
+    public static String downloadText(String urlString) {
         String string = "";
 
         try {
@@ -60,10 +57,10 @@ public class Utils {
             string = sb.toString();
             bis.close();
         } catch (MalformedURLException e) {
-            Log.e("utils.downloadUrl", e.getMessage());
+            Log.e("utils.downloadText", e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            Log.e("utils.downloadUrl", e.getMessage());
+            Log.e("utils.downloadText", e.getMessage());
             e.printStackTrace();
         }
 
