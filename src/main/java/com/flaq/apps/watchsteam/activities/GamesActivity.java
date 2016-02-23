@@ -11,7 +11,7 @@ import android.widget.GridView;
 
 import com.flaq.apps.watchsteam.adapters.GamesAdapter;
 import com.flaq.apps.watchsteam.R;
-import com.flaq.apps.watchsteam.utilities.URLUtilities;
+import com.flaq.apps.watchsteam.utilities.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,7 +55,7 @@ public class GamesActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            String gamesString = URLUtilities.downloadText(getString(R.string.json_url_games_top));
+            String gamesString = Utils.downloadText(getString(R.string.json_url_games_top));
             gamesList = new ArrayList<>();
 
             try {
@@ -72,7 +72,7 @@ public class GamesActivity extends AppCompatActivity {
 
                     gameMap.put("name", gameObj.getString("name"));
 
-                    Bitmap image = URLUtilities.downloadBitmap(imageObj.getString("large"));
+                    Bitmap image = Utils.downloadBitmap(imageObj.getString("large"));
                     gameMap.put("image", image);
 
                     gamesList.add(gameMap);

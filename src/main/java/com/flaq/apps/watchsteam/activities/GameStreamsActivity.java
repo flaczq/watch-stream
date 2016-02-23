@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.flaq.apps.watchsteam.R;
 import com.flaq.apps.watchsteam.adapters.GameStreamsAdapter;
-import com.flaq.apps.watchsteam.utilities.URLUtilities;
+import com.flaq.apps.watchsteam.utilities.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,7 +75,7 @@ public class GameStreamsActivity extends AppCompatActivity {
             streamsList = new ArrayList<>();
 
             try {
-                String gamesString = URLUtilities.downloadText(getString(R.string.json_url_game_streams) + URLEncoder.encode(name, "UTF-8"));
+                String gamesString = Utils.downloadText(getString(R.string.json_url_game_streams) + URLEncoder.encode(name, "UTF-8"));
 
                 JSONObject streamsObj = new JSONObject(gamesString);
                 JSONArray streamsArr = streamsObj.getJSONArray("streams");
@@ -91,7 +91,7 @@ public class GameStreamsActivity extends AppCompatActivity {
                     gameMap.put("status", channelObj.getString("status"));
                     gameMap.put("viewers", streamsObj.getString("viewers"));
                     gameMap.put("updatedAt", channelObj.getString("updated_at"));
-                    Bitmap logo = URLUtilities.downloadBitmap(channelObj.getString("logo"));
+                    Bitmap logo = Utils.downloadBitmap(channelObj.getString("logo"));
                     gameMap.put("logo", logo);
 
                     streamsList.add(gameMap);
