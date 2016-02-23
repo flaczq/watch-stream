@@ -1,4 +1,4 @@
-package com.flaq.apps.watchsteam;
+package com.flaq.apps.watchsteam.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.flaq.apps.watchsteam.R;
+import com.flaq.apps.watchsteam.activities.GameStreamsActivity;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by FLAQ on 2015-11-21.
- */
 public class GamesAdapter extends BaseAdapter {
 
     private Context context;
@@ -42,7 +42,7 @@ public class GamesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final HashMap<String, Object> singleGame = gamesList.get(position);
+        final HashMap<String, Object> game = gamesList.get(position);
         ImageView imageView;
 
         if (convertView == null) {
@@ -53,14 +53,14 @@ public class GamesAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        Bitmap bitmap = (Bitmap) singleGame.get("image");
+        Bitmap bitmap = (Bitmap) game.get("image");
         imageView.setImageBitmap(bitmap);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 intent = new Intent(context, GameStreamsActivity.class);
-                intent.putExtra("name", (String) singleGame.get("name"));
+                intent.putExtra("name", (String) game.get("name"));
                 context.startActivity(intent);
             }
         });

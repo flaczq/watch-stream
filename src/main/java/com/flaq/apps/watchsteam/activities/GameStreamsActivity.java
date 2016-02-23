@@ -1,4 +1,4 @@
-package com.flaq.apps.watchsteam;
+package com.flaq.apps.watchsteam.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -8,12 +8,21 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.flaq.apps.watchsteam.R;
+import com.flaq.apps.watchsteam.adapters.GameStreamsAdapter;
+import com.flaq.apps.watchsteam.utilities.URLUtilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,7 +30,7 @@ public class GameStreamsActivity extends AppCompatActivity {
 
     private Intent intent;
     private ListView listView;
-    private GamesAdapter streamsAdapter;
+    private GameStreamsAdapter gameStreamsAdapter;
     private ProgressDialog streamsPreloader;
     private ArrayList<HashMap<String, Object>> streamsList;
 
@@ -34,6 +43,13 @@ public class GameStreamsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         listView = (ListView) findViewById(R.id.listView);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(GameStreamsActivity.this, "No: " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         intent = getIntent();
 
@@ -56,10 +72,11 @@ public class GameStreamsActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             String name = intent.getStringExtra("name");
-            String gamesString = Utils.downloadUrl(getString(R.string.json_url_game_streams) + name);
             streamsList = new ArrayList<>();
 
             try {
+                String gamesString = URLUtilities.downloadText(getString(R.string.json_url_game_streams) + URLEncoder.encode(name, "UTF-8"));
+
                 JSONObject streamsObj = new JSONObject(gamesString);
                 JSONArray streamsArr = streamsObj.getJSONArray("streams");
                 JSONObject channelObj;
@@ -72,15 +89,18 @@ public class GameStreamsActivity extends AppCompatActivity {
 
                     gameMap.put("name", channelObj.getString("display_name"));
                     gameMap.put("status", channelObj.getString("status"));
-                    gameMap.put("viewers", channelObj.getString("viewers"));
+                    gameMap.put("viewers", streamsObj.getString("viewers"));
                     gameMap.put("updatedAt", channelObj.getString("updated_at"));
-                    Bitmap logo = Utils.downloadBitmap(channelObj.getString("logo"));
+                    Bitmap logo = URLUtilities.downloadBitmap(channelObj.getString("logo"));
                     gameMap.put("logo", logo);
 
                     streamsList.add(gameMap);
                 }
             } catch (JSONException e) {
                 Log.e("game streams json", e.getMessage());
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                Log.e("Encoding game name", e.getMessage());
                 e.printStackTrace();
             }
 
@@ -89,8 +109,8 @@ public class GameStreamsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void args) {
-            streamsAdapter = new GamesAdapter(GameStreamsActivity.this, streamsList);
-            listView.setAdapter(streamsAdapter);
+            gameStreamsAdapter = new GameStreamsAdapter(GameStreamsActivity.this, streamsList);
+            listView.setAdapter(gameStreamsAdapter);
 
             streamsPreloader.dismiss();
         }

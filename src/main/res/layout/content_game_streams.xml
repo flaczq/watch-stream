@@ -11,7 +11,7 @@
     android:background="#66CCFF"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_game_streams"
-    tools:context="com.flaq.apps.watchsteam.GameStreamsActivity">
+    tools:context=".activities.GameStreamsActivity">
 
     <ListView
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.flaq.apps.watchsteam;
+package com.flaq.apps.watchsteam.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-/**
- * Created by FLAQ on 2015-11-20.
- */
+import com.flaq.apps.watchsteam.R;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
