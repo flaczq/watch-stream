@@ -79,20 +79,21 @@ public class GameStreamsActivity extends AppCompatActivity {
 
                 JSONObject streamsObj = new JSONObject(gamesString);
                 JSONArray streamsArr = streamsObj.getJSONArray("streams");
-                JSONObject channelObj;
+                JSONObject channelObj, previewObj;
 
                 for (int i = 0; i < streamsArr.length(); i++) {
                     HashMap<String, Object> gameMap = new HashMap<>();
 
                     streamsObj = streamsArr.getJSONObject(i);
                     channelObj = streamsObj.getJSONObject("channel");
+                    previewObj = streamsObj.getJSONObject("preview");
 
                     gameMap.put("name", channelObj.getString("display_name"));
                     gameMap.put("status", channelObj.getString("status"));
                     gameMap.put("viewers", streamsObj.getString("viewers"));
                     gameMap.put("updatedAt", channelObj.getString("updated_at"));
-                    Bitmap logo = URLUtils.downloadBitmap(channelObj.getString("logo"));
-                    gameMap.put("logo", logo);
+                    Bitmap preview = URLUtils.downloadBitmap(previewObj.getString("small"));
+                    gameMap.put("preview", preview);
 
                     streamsList.add(gameMap);
                 }

@@ -35,13 +35,13 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
         TextView status = (TextView) itemView.findViewById(R.id.status);
         TextView viewers = (TextView) itemView.findViewById(R.id.viewers);
         TextView updated = (TextView) itemView.findViewById(R.id.updated);
-        ImageView logo = (ImageView) itemView.findViewById(R.id.logo);
+        ImageView preview = (ImageView) itemView.findViewById(R.id.preview);
 
         channel.setText((String) stream.get("channel_name"));
         status.setText((String) stream.get("status"));
         viewers.setText((String) stream.get("viewers"));
         updated.setText((String) stream.get("since"));
-        logo.setImageBitmap((Bitmap) stream.get("logo"));
+        preview.setImageBitmap((Bitmap) stream.get("preview"));
 
         return itemView;
     }
