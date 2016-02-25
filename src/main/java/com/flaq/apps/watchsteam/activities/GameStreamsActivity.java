@@ -82,20 +82,26 @@ public class GameStreamsActivity extends AppCompatActivity {
                 JSONObject channelObj, previewObj;
 
                 for (int i = 0; i < streamsArr.length(); i++) {
-                    HashMap<String, Object> gameMap = new HashMap<>();
+                    HashMap<String, Object> streamsMap = new HashMap<>();
 
                     streamsObj = streamsArr.getJSONObject(i);
                     channelObj = streamsObj.getJSONObject("channel");
                     previewObj = streamsObj.getJSONObject("preview");
 
-                    gameMap.put("name", channelObj.getString("display_name"));
-                    gameMap.put("status", channelObj.getString("status"));
-                    gameMap.put("viewers", streamsObj.getString("viewers"));
-                    gameMap.put("updatedAt", channelObj.getString("updated_at"));
-                    Bitmap preview = URLUtils.downloadBitmap(previewObj.getString("small"));
-                    gameMap.put("preview", preview);
+                    streamsMap.put("name", channelObj.getString("display_name"));
+                    streamsMap.put("status", channelObj.getString("status"));
+                    streamsMap.put("viewers", streamsObj.getString("viewers"));
+                    streamsMap.put("updatedAt", channelObj.getString("updated_at"));
 
-                    streamsList.add(gameMap);
+                    //String logoURL = channelObj.getString("logo").replace("300x300", "100x100");
+                    Bitmap logo = URLUtils.downloadBitmap(channelObj.getString("logo"));
+                    streamsMap.put("logo", logo);
+
+                    String previewURL = previewObj.getString("template").replace("{width}x{height}", "177x100");
+                    //Bitmap preview = URLUtils.downloadBitmap(previewURL);
+                    streamsMap.put("previewURL", previewURL);
+
+                    streamsList.add(streamsMap);
                 }
             } catch (JSONException e) {
                 Log.e("game streams json", e.getMessage());

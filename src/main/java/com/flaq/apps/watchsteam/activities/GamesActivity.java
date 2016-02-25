@@ -64,18 +64,18 @@ public class GamesActivity extends AppCompatActivity {
                 JSONObject gameObj, imageObj;
 
                 for(int i = 0; i < gamesArr.length(); i++) {
-                    HashMap<String, Object> gameMap = new HashMap<>();
+                    HashMap<String, Object> gamesMap = new HashMap<>();
 
                     gamesObj = gamesArr.getJSONObject(i);
                     gameObj = gamesObj.getJSONObject("game");
                     imageObj = gameObj.getJSONObject("box");
 
-                    gameMap.put("name", gameObj.getString("name"));
+                    gamesMap.put("name", gameObj.getString("name"));
 
                     Bitmap image = URLUtils.downloadBitmap(imageObj.getString("large"));
-                    gameMap.put("image", image);
+                    gamesMap.put("image", image);
 
-                    gamesList.add(gameMap);
+                    gamesList.add(gamesMap);
                 }
             } catch (JSONException e) {
                 Log.e("games json", e.getMessage());
