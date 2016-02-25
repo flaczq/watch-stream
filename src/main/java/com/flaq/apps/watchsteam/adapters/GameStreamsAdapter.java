@@ -43,7 +43,7 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
         ImageView previewButton = (ImageView) itemView.findViewById(R.id.previewButton);
         preview = (ImageView) itemView.findViewById(R.id.preview);
 
-        channel.setText((String) stream.get("channel"));
+        channel.setText((String) stream.get("name"));
         status.setText((String) stream.get("status"));
         viewers.setText((String) stream.get("viewers"));
         updated.setText((String) stream.get("since"));
@@ -53,9 +53,24 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
 
         previewButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Log.d("*<GameStreamsAdapter>", "Position: " + pos);
-                new DownBitmap().execute(previewURL);
+            public void onClick(View v) {
+                Log.d("*<GameStreamsAdapter>", "ON: " + pos);
+
+                if (preview.getDrawable() == null) {
+                    new DownBitmap().execute(previewURL);
+                }
+                if (preview.getVisibility() == View.GONE) {
+                    preview.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("*<GameStreamsAdapter>", "OFF: " + pos);
+
+                preview.setVisibility(View.GONE);
             }
         });
 
@@ -72,7 +87,6 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
 
         protected void onPostExecute(Bitmap previewBitmap) {
             preview.setImageBitmap(previewBitmap);
-            preview.setVisibility(View.VISIBLE);
         }
 
     }
