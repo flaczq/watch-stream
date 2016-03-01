@@ -9,8 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.GridView;
 
-import com.flaq.apps.watchsteam.adapters.GamesAdapter;
 import com.flaq.apps.watchsteam.R;
+import com.flaq.apps.watchsteam.adapters.GamesAdapter;
 import com.flaq.apps.watchsteam.utilities.URLUtils;
 
 import org.json.JSONArray;

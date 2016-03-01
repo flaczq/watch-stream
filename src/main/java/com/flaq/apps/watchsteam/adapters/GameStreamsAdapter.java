@@ -32,6 +32,7 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         HashMap<String, Object> stream = streamsList.get(position);
+
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.content_game_streams_item, parent, false);
 
@@ -48,7 +49,9 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
         viewers.setText((String) stream.get("viewers"));
         updated.setText((String) stream.get("since"));
         logo.setImageBitmap((Bitmap) stream.get("logo"));
-        final String previewURL = (String) stream.get("previewURL");
+        //final String previewURL = (String) stream.get("previewURL");
+        //new DownBitmap().execute(previewURL);
+        final Bitmap previewBitmap = (Bitmap) stream.get("preview");
         final String pos = String.valueOf(position);
 
         previewButton.setOnClickListener(new View.OnClickListener() {
@@ -57,10 +60,13 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
                 Log.d("*<GameStreamsAdapter>", "ON: " + pos);
 
                 if (preview.getDrawable() == null) {
-                    new DownBitmap().execute(previewURL);
+                    preview.setImageBitmap(previewBitmap);
                 }
+
                 if (preview.getVisibility() == View.GONE) {
                     preview.setVisibility(View.VISIBLE);
+                } else {
+                    preview.setVisibility(View.GONE);
                 }
             }
         });
@@ -70,7 +76,11 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
             public void onClick(View v) {
                 Log.d("*<GameStreamsAdapter>", "OFF: " + pos);
 
-                preview.setVisibility(View.GONE);
+                if (preview.getVisibility() == View.GONE) {
+                    preview.setVisibility(View.VISIBLE);
+                } else {
+                    preview.setVisibility(View.GONE);
+                }
             }
         });
 

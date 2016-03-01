@@ -3,10 +3,12 @@ package com.flaq.apps.watchsteam.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.flaq.apps.watchsteam.R;
 import com.flaq.apps.watchsteam.activities.GameStreamsActivity;
@@ -55,6 +57,13 @@ public class GamesAdapter extends BaseAdapter {
 
         Bitmap bitmap = (Bitmap) game.get("image");
         imageView.setImageBitmap(bitmap);
+
+        if (bitmap.getPixel(0, 0) == Color.argb(255, 103, 68, 168)) {
+            TextView name = new TextView(context);
+            name.setText((String) game.get("name"));
+            name.setVisibility(View.VISIBLE);
+            name.setSelected(true);
+        }
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

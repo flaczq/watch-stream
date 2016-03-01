@@ -97,9 +97,9 @@ public class GameStreamsActivity extends AppCompatActivity {
                     Bitmap logo = URLUtils.downloadBitmap(channelObj.getString("logo"));
                     streamsMap.put("logo", logo);
 
-                    String previewURL = previewObj.getString("template").replace("{width}x{height}", "177x100");
-                    //Bitmap preview = URLUtils.downloadBitmap(previewURL);
-                    streamsMap.put("previewURL", previewURL);
+                    //String previewURL = previewObj.getString("template").replace("{width}x{height}", "177x100");
+                    Bitmap preview = URLUtils.downloadBitmap(previewObj.getString("template").replace("{width}x{height}", "177x100"));
+                    streamsMap.put("preview", preview);
 
                     streamsList.add(streamsMap);
                 }
