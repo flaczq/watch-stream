@@ -32,9 +32,14 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         HashMap<String, Object> stream = streamsList.get(position);
+        View itemView;
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = inflater.inflate(R.layout.content_game_streams_item, parent, false);
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            itemView = inflater.inflate(R.layout.content_game_streams_item, null, false);
+        } else {
+            itemView = convertView;
+        }
 
         TextView channel = (TextView) itemView.findViewById(R.id.channel);
         TextView status = (TextView) itemView.findViewById(R.id.status);
@@ -51,7 +56,7 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
         logo.setImageBitmap((Bitmap) stream.get("logo"));
         //final String previewURL = (String) stream.get("previewURL");
         //new DownBitmap().execute(previewURL);
-        final Bitmap previewBitmap = (Bitmap) stream.get("preview");
+        preview.setImageBitmap((Bitmap) stream.get("preview"));
         final String pos = String.valueOf(position);
 
         previewButton.setOnClickListener(new View.OnClickListener() {
@@ -59,14 +64,14 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
             public void onClick(View v) {
                 Log.d("*<GameStreamsAdapter>", "ON: " + pos);
 
-                if (preview.getDrawable() == null) {
+                /*if (preview.getDrawable() == null) {
                     preview.setImageBitmap(previewBitmap);
-                }
+                }*/
 
-                if (preview.getVisibility() == View.GONE) {
+                if (preview.getVisibility() == View.INVISIBLE) {
                     preview.setVisibility(View.VISIBLE);
                 } else {
-                    preview.setVisibility(View.GONE);
+                    preview.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -76,10 +81,10 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
             public void onClick(View v) {
                 Log.d("*<GameStreamsAdapter>", "OFF: " + pos);
 
-                if (preview.getVisibility() == View.GONE) {
+                if (preview.getVisibility() == View.INVISIBLE) {
                     preview.setVisibility(View.VISIBLE);
                 } else {
-                    preview.setVisibility(View.GONE);
+                    preview.setVisibility(View.INVISIBLE);
                 }
             }
         });
