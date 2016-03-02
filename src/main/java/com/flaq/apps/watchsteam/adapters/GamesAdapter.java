@@ -44,7 +44,7 @@ public class GamesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final HashMap<String, Object> game = gamesList.get(position);
+        HashMap<String, Object> game = gamesList.get(position);
         ImageView imageView;
 
         if (convertView == null) {
@@ -57,6 +57,7 @@ public class GamesAdapter extends BaseAdapter {
 
         Bitmap bitmap = (Bitmap) game.get("image");
         imageView.setImageBitmap(bitmap);
+        imageView.setTag(position);
 
         if (bitmap.getPixel(0, 0) == Color.argb(255, 103, 68, 168)) {
             TextView name = new TextView(context);
@@ -68,8 +69,11 @@ public class GamesAdapter extends BaseAdapter {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int pos = (int) view.getTag();
+                String name = (String) gamesList.get(pos).get("name");
+
                 intent = new Intent(context, GameStreamsActivity.class);
-                intent.putExtra("name", (String) game.get("name"));
+                intent.putExtra("name", name);
                 context.startActivity(intent);
             }
         });

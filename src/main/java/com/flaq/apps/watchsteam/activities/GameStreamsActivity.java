@@ -53,8 +53,7 @@ public class GameStreamsActivity extends AppCompatActivity {
 
         intent = getIntent();
 
-        DownJSON jsonInstance = new DownJSON();
-        jsonInstance.execute();
+        new DownJSON().execute();
     }
 
     private class DownJSON extends AsyncTask<Void, Void, Void> {
@@ -75,7 +74,7 @@ public class GameStreamsActivity extends AppCompatActivity {
             streamsList = new ArrayList<>();
 
             try {
-                String gamesString = URLUtils.downloadText(getString(R.string.json_url_game_streams) + URLEncoder.encode(name, "UTF-8"));
+                String gamesString = URLUtils.downloadText(getString(R.string.json_url_game_streams) + URLEncoder.encode(name, "UTF-8") + "&limit=10");
 
                 JSONObject streamsObj = new JSONObject(gamesString);
                 JSONArray streamsArr = streamsObj.getJSONArray("streams");
@@ -97,9 +96,8 @@ public class GameStreamsActivity extends AppCompatActivity {
                     Bitmap logo = URLUtils.downloadBitmap(channelObj.getString("logo"));
                     streamsMap.put("logo", logo);
 
-                    //String previewURL = previewObj.getString("template").replace("{width}x{height}", "177x100");
-                    Bitmap preview = URLUtils.downloadBitmap(previewObj.getString("template").replace("{width}x{height}", "17x10"));
-                    streamsMap.put("preview", preview);
+                    String previewURL = previewObj.getString("template").replace("{width}x{height}", "177x100");
+                    streamsMap.put("previewURL", previewURL);
 
                     streamsList.add(streamsMap);
                 }

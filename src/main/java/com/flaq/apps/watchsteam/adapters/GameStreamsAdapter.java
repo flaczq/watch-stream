@@ -3,7 +3,6 @@ package com.flaq.apps.watchsteam.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
 
     private Context context;
     private ArrayList<HashMap<String, Object>> streamsList;
-    private ImageView preview;
 
     public GameStreamsAdapter(Context context, ArrayList<HashMap<String, Object>> streamsList) {
         super(context, -1, streamsList);
@@ -30,78 +28,100 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public int getViewTypeCount() {
+        return getCount();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
         HashMap<String, Object> stream = streamsList.get(position);
-        View itemView;
+        final ViewHolder viewHolder;
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            itemView = inflater.inflate(R.layout.content_game_streams_item, null, false);
+            convertView = inflater.inflate(R.layout.content_game_streams_item, parent, false);
+            viewHolder = new ViewHolder();
+
+            viewHolder.channel = (TextView) convertView.findViewById(R.id.channel);
+            viewHolder.status = (TextView) convertView.findViewById(R.id.status);
+            viewHolder.viewers = (TextView) convertView.findViewById(R.id.viewers);
+            viewHolder.updated = (TextView) convertView.findViewById(R.id.updated);
+            viewHolder.logo = (ImageView) convertView.findViewById(R.id.logo);
+            viewHolder.previewButton = (ImageView) convertView.findViewById(R.id.previewButton);
+            viewHolder.preview = (ImageView) convertView.findViewById(R.id.preview);
+
+            convertView.setTag(viewHolder);
         } else {
-            itemView = convertView;
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        TextView channel = (TextView) itemView.findViewById(R.id.channel);
-        TextView status = (TextView) itemView.findViewById(R.id.status);
-        TextView viewers = (TextView) itemView.findViewById(R.id.viewers);
-        TextView updated = (TextView) itemView.findViewById(R.id.updated);
-        ImageView logo = (ImageView) itemView.findViewById(R.id.logo);
-        ImageView previewButton = (ImageView) itemView.findViewById(R.id.previewButton);
-        preview = (ImageView) itemView.findViewById(R.id.preview);
+        viewHolder.channel.setText((String) stream.get("name"));
+        viewHolder.status.setText((String) stream.get("status"));
+        viewHolder.viewers.setText((String) stream.get("viewers"));
+        viewHolder.updated.setText((String) stream.get("updatedAt"));
+        viewHolder.logo.setImageBitmap((Bitmap) stream.get("logo"));
 
-        channel.setText((String) stream.get("name"));
-        status.setText((String) stream.get("status"));
-        viewers.setText((String) stream.get("viewers"));
-        updated.setText((String) stream.get("since"));
-        logo.setImageBitmap((Bitmap) stream.get("logo"));
-        //final String previewURL = (String) stream.get("previewURL");
-        //new DownBitmap().execute(previewURL);
-        preview.setImageBitmap((Bitmap) stream.get("preview"));
-        final String pos = String.valueOf(position);
-
-        previewButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.previewButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Log.d("*<GameStreamsAdapter>", "ON: " + pos);
+            public void onClick(View view) {
+                if (viewHolder.preview.getDrawable() == null) {
+                    String previewURL = (String) streamsList.get(position).get("previewURL");
 
-                /*if (preview.getDrawable() == null) {
-                    preview.setImageBitmap(previewBitmap);
-                }*/
+                    new DownBitmap().execute(viewHolder.preview, previewURL);
+                }
 
-                if (preview.getVisibility() == View.INVISIBLE) {
-                    preview.setVisibility(View.VISIBLE);
+                if (viewHolder.preview.getVisibility() == View.INVISIBLE) {
+                    viewHolder.preview.setVisibility(View.VISIBLE);
                 } else {
-                    preview.setVisibility(View.INVISIBLE);
+                    viewHolder.preview.setVisibility(View.INVISIBLE);
                 }
             }
         });
 
-        preview.setOnClickListener(new View.OnClickListener() {
+        viewHolder.preview.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Log.d("*<GameStreamsAdapter>", "OFF: " + pos);
-
-                if (preview.getVisibility() == View.INVISIBLE) {
-                    preview.setVisibility(View.VISIBLE);
+            public void onClick(View view) {
+                if (view.getVisibility() == View.INVISIBLE) {
+                    view.setVisibility(View.VISIBLE);
                 } else {
-                    preview.setVisibility(View.INVISIBLE);
+                    view.setVisibility(View.INVISIBLE);
                 }
             }
         });
 
-        return itemView;
+        return convertView;
     }
 
-    class DownBitmap extends AsyncTask<String, Void, Bitmap> {
+    private class ViewHolder {
+
+        private TextView channel, status, viewers, updated;
+        private ImageView logo, previewButton, preview;
+
+    }
+
+    class DownBitmap extends AsyncTask<Object, Void, Bitmap> {
+
+        private String previewUrl;
+        private Bitmap previewBitmap;
+        private ImageView imageView;
 
         @Override
-        protected Bitmap doInBackground(String... bitmapURL) {
-            Bitmap previewBitmap = URLUtils.downloadBitmap(bitmapURL[0]);
+        protected Bitmap doInBackground(Object... params) {
+            imageView = (ImageView) params[0];
+            previewUrl = (String) params[1];
+            previewBitmap = URLUtils.downloadBitmap(previewUrl);
             return previewBitmap;
         }
 
         protected void onPostExecute(Bitmap previewBitmap) {
-            preview.setImageBitmap(previewBitmap);
+            if (imageView != null && previewBitmap != null) {
+                imageView.setImageBitmap(previewBitmap);
+            }
         }
 
     }

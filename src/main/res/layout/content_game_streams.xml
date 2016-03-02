@@ -19,8 +19,6 @@
         android:cacheColorHint="#66CCFF"
         android:listSelector="@null"
         android:scrollingCache="false"
-        android:gravity="center"
-        android:horizontalSpacing="@dimen/games_margin"
-        android:verticalSpacing="@dimen/games_margin" />
+        android:gravity="center" />
 
 </RelativeLayout>
