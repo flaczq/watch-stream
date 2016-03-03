@@ -1,12 +1,16 @@
 package com.flaq.apps.watchsteam.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.flaq.apps.watchsteam.R;
@@ -37,11 +41,22 @@ public class GamesActivity extends AppCompatActivity {
 
         gridView = (GridView) findViewById(R.id.gridView);
 
-        DownJSON jsonInstance = new DownJSON();
-        jsonInstance.execute();
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String game = (String) gamesList.get(position).get("name");
+                Context context = GamesActivity.this;
+
+                Intent nextIntent = new Intent(context, GameStreamsActivity.class);
+                nextIntent.putExtra("game", game);
+                context.startActivity(nextIntent);
+            }
+        });
+
+        new ProcessGamesJSON().execute();
     }
 
-    private class DownJSON extends AsyncTask<Void, Void, Void> {
+    private class ProcessGamesJSON extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -55,7 +70,7 @@ public class GamesActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            String gamesString = URLUtils.downloadText(getString(R.string.json_url_games_top));
+            String gamesString = URLUtils.downloadText(getString(R.string.url_games_top));
             gamesList = new ArrayList<>();
 
             try {

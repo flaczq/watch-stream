@@ -72,7 +72,7 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
                 if (viewHolder.preview.getDrawable() == null) {
                     String previewURL = (String) streamsList.get(position).get("previewURL");
 
-                    new DownBitmap().execute(viewHolder.preview, previewURL);
+                    new ProcessBitmap().execute(viewHolder.preview, previewURL);
                 }
 
                 if (viewHolder.preview.getVisibility() == View.INVISIBLE) {
@@ -104,7 +104,7 @@ public class GameStreamsAdapter extends ArrayAdapter<HashMap<String, Object>> {
 
     }
 
-    class DownBitmap extends AsyncTask<Object, Void, Bitmap> {
+    class ProcessBitmap extends AsyncTask<Object, Void, Bitmap> {
 
         private String previewUrl;
         private Bitmap previewBitmap;

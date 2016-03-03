@@ -1,6 +1,7 @@
 package com.flaq.apps.watchsteam.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -11,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.flaq.apps.watchsteam.R;
 import com.flaq.apps.watchsteam.adapters.GameStreamsAdapter;
@@ -31,8 +31,8 @@ public class GameStreamsActivity extends AppCompatActivity {
     private Intent intent;
     private ListView listView;
     private GameStreamsAdapter gameStreamsAdapter;
-    private ProgressDialog streamsPreloader;
-    private ArrayList<HashMap<String, Object>> streamsList;
+    private ProgressDialog gameStreamsPreloader;
+    private ArrayList<HashMap<String, Object>> gameStreamsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,59 +47,64 @@ public class GameStreamsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(GameStreamsActivity.this, "No: " + position, Toast.LENGTH_SHORT).show();
+                String stream = (String) gameStreamsList.get(position).get("name");
+                Context context = GameStreamsActivity.this;
+
+                Intent nextIntent = new Intent(context, StreamActivity.class);
+                nextIntent.putExtra("stream", stream);
+                context.startActivity(nextIntent);
             }
         });
 
         intent = getIntent();
 
-        new DownJSON().execute();
+        new ProcessGameStreamsJSON().execute();
     }
 
-    private class DownJSON extends AsyncTask<Void, Void, Void> {
+    private class ProcessGameStreamsJSON extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            streamsPreloader = new ProgressDialog(GameStreamsActivity.this);
-            streamsPreloader.setTitle("Please wait");
-            streamsPreloader.setMessage("Streams are loading...");
-            streamsPreloader.setIndeterminate(false);
-            streamsPreloader.show();
+            gameStreamsPreloader = new ProgressDialog(GameStreamsActivity.this);
+            gameStreamsPreloader.setTitle("Please wait");
+            gameStreamsPreloader.setMessage("Streams are loading...");
+            gameStreamsPreloader.setIndeterminate(false);
+            gameStreamsPreloader.show();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            String name = intent.getStringExtra("name");
-            streamsList = new ArrayList<>();
+            String game = intent.getStringExtra("game");
+            gameStreamsList = new ArrayList<>();
 
             try {
-                String gamesString = URLUtils.downloadText(getString(R.string.json_url_game_streams) + URLEncoder.encode(name, "UTF-8") + "&limit=10");
+                String gamesString = URLUtils.downloadText(getString(R.string.url_game_streams) + URLEncoder.encode(game, "UTF-8") + "&limit=10");
 
                 JSONObject streamsObj = new JSONObject(gamesString);
                 JSONArray streamsArr = streamsObj.getJSONArray("streams");
                 JSONObject channelObj, previewObj;
 
                 for (int i = 0; i < streamsArr.length(); i++) {
-                    HashMap<String, Object> streamsMap = new HashMap<>();
+                    HashMap<String, Object> gameStreamsMap = new HashMap<>();
 
                     streamsObj = streamsArr.getJSONObject(i);
                     channelObj = streamsObj.getJSONObject("channel");
                     previewObj = streamsObj.getJSONObject("preview");
 
-                    streamsMap.put("name", channelObj.getString("display_name"));
-                    streamsMap.put("status", channelObj.getString("status"));
-                    streamsMap.put("viewers", streamsObj.getString("viewers"));
-                    streamsMap.put("updatedAt", channelObj.getString("updated_at"));
+                    gameStreamsMap.put("name", channelObj.getString("display_name"));
+                    gameStreamsMap.put("status", channelObj.getString("status"));
+                    gameStreamsMap.put("viewers", streamsObj.getString("viewers"));
+                    gameStreamsMap.put("updatedAt", channelObj.getString("updated_at"));
 
                     //String logoURL = channelObj.getString("logo").replace("300x300", "100x100");
                     Bitmap logo = URLUtils.downloadBitmap(channelObj.getString("logo"));
-                    streamsMap.put("logo", logo);
+                    gameStreamsMap.put("logo", logo);
 
                     String previewURL = previewObj.getString("template").replace("{width}x{height}", "177x100");
-                    streamsMap.put("previewURL", previewURL);
+                    gameStreamsMap.put("previewURL", previewURL);
 
-                    streamsList.add(streamsMap);
+                    gameStreamsList.add(gameStreamsMap);
                 }
             } catch (JSONException e) {
                 Log.e("game streams json", e.getMessage());
@@ -114,10 +119,10 @@ public class GameStreamsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void args) {
-            gameStreamsAdapter = new GameStreamsAdapter(GameStreamsActivity.this, streamsList);
+            gameStreamsAdapter = new GameStreamsAdapter(GameStreamsActivity.this, gameStreamsList);
             listView.setAdapter(gameStreamsAdapter);
 
-            streamsPreloader.dismiss();
+            gameStreamsPreloader.dismiss();
         }
     }
 

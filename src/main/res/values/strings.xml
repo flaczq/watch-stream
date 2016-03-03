@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">WatchSteam</string>
     <string name="action_settings">Settings</string>
+
+    <!-- TITLES -->
     <string name="title_activity_games">GamesActivity</string>
     <string name="title_activity_game_streams">GameStreamsActivity</string>
+    <string name="title_activity_stream">StreamActivity</string>
 
-    <!-- JSONS -->
-    <string name="json_url_games_top">https://api.twitch.tv/kraken/games/top</string>
-    <string name="json_url_game_streams">https://api.twitch.tv/kraken/streams?game=</string>
+    <!-- URLS -->
+    <string name="url_games_top">https://api.twitch.tv/kraken/games/top</string>
+    <string name="url_game_streams">https://api.twitch.tv/kraken/streams?game=</string>
+    <string name="url_stream_1">http://www.twitch.tv/</string>
+    <string name="url_stream_2">/popout</string>
 </resources>

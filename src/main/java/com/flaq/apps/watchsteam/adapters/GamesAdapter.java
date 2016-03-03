@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flaq.apps.watchsteam.R;
-import com.flaq.apps.watchsteam.activities.GameStreamsActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,18 +64,6 @@ public class GamesAdapter extends BaseAdapter {
             name.setVisibility(View.VISIBLE);
             name.setSelected(true);
         }
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int pos = (int) view.getTag();
-                String name = (String) gamesList.get(pos).get("name");
-
-                intent = new Intent(context, GameStreamsActivity.class);
-                intent.putExtra("name", name);
-                context.startActivity(intent);
-            }
-        });
 
         return imageView;
     }

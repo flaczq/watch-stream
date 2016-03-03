@@ -37,7 +37,18 @@
             android:label="@string/title_activity_game_streams"
             android:parentActivityName=".activities.GamesActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.GamesActivity" />
+        </activity>
 
+        <activity android:name=".activities.StreamActivity"
+            android:label="@string/title_activity_stream"
+            android:parentActivityName=".activities.GameStreamsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.GameStreamsActivity" />
         </activity>
 
         <meta-data
