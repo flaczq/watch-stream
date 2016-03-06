@@ -44,6 +44,7 @@
 
         <activity android:name=".activities.StreamActivity"
             android:label="@string/title_activity_stream"
+            android:screenOrientation="landscape"
             android:parentActivityName=".activities.GameStreamsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
